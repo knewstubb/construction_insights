@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback Analysis{% endblock %}
+
+{% block content %}
+<h1>Feedback Trend Analysis</h1>
+<div id="chat-container">
+    <div id="chat-messages"></div>
+    <form id="query-form">
+        <input type="text" id="query-input" placeholder="Ask about trends in the feedback data..." required>
+        <button type="submit">Analyze</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('query-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var query = document.getElementById('query-input').value;
+    var messagesContainer = document.getElementById('chat-messages');
+    
+    // Add user query to chat
+    messagesContainer.innerHTML += '<p><strong>You:</strong> ' + query + '</p>';
+    
+    fetch('/analyze', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'query=' + encodeURIComponent(query)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Add AI response to chat
+        messagesContainer.innerHTML += '<p><strong>AI:</strong> ' + data.result + '</p>';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        messagesContainer.innerHTML += '<p><strong>Error:</strong> Failed to get response.</p>';
+    });
+    
+    document.getElementById('query-input').value = '';
+});
+</script>
+{% endblock %}

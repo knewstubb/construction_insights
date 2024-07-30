@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback Form{% endblock %}
+
+{% block content %}
+<h1>Daily Feedback Form</h1>
+<form id="feedbackForm">
+    <div>
+        <label for="highlights">Highlights:</label>
+        <textarea id="highlights" name="highlights" required></textarea>
+    </div>
+    <div>
+        <label for="lowlights">Lowlights:</label>
+        <textarea id="lowlights" name="lowlights" required></textarea>
+    </div>
+    <div>
+        <label for="emerging_issues">Emerging Issues:</label>
+        <textarea id="emerging_issues" name="emerging_issues" required></textarea>
+    </div>
+    <button type="submit">Submit Feedback</button>
+</form>
+<div id="message"></div>
+{% endblock %}

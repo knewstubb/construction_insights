@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Feedback Dashboard</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Weather</th>
+            <th>Highlights</th>
+            <th>Lowlights</th>
+            <th>Emerging Issues</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for feedback in feedbacks %}
+        <tr>
+            <td>{{ feedback.timestamp }}</td>
+            <td>{{ feedback.weather }}</td>
+            <td>{{ feedback.highlights }}</td>
+            <td>{{ feedback.lowlights }}</td>
+            <td>{{ feedback.emerging_issues }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
