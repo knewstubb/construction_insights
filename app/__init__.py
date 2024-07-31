@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager, UserMixin, LoginManager
 from config import Config
 import logging
 from logging.handlers import RotatingFileHandler
@@ -10,6 +11,9 @@ import os
 db = SQLAlchemy()
 # Initialize Flask-Migrate
 migrate = Migrate()
+# Initialize LoginManager
+login = LoginManager()
+login.login_view = 'auth.login'
 
 def create_app(config_class=Config):
     # Create and configure the app
@@ -22,12 +26,15 @@ def create_app(config_class=Config):
     # Initialize Flask-Migrate with the app and db
     migrate.init_app(app, db)
 
-    # Import models
-    from app import models
+    # Add this line after initializing the app
+    login.init_app(app)
 
     # Import and register blueprints
     from app.routes import bp as main_bp
     app.register_blueprint(main_bp)
+
+    from app.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     # Set up logging
     if not app.debug and not app.testing:
@@ -52,3 +59,18 @@ def create_app(config_class=Config):
 
 # Import models at the bottom to avoid circular imports
 from app import models
+
+@login.user_loader
+def load_user(id):
+    return models.User.query.get(int(id))
+
+# Comments:
+# 1. We import LoginManager from flask_login.
+# 2. We initialize LoginManager and set the login view.
+# 3. In create_app, we initialize LoginManager with the app.
+# 4. We import and register a new auth blueprint.
+# 5. We add a user_loader function to load users from the database.
+
+
+
+
